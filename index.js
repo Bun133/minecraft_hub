@@ -7,7 +7,7 @@ if(!fs.existsSync(dataDir + '/account.json')) fs.writeFileSync(dataDir + '/accou
 const accountData = JSON.parse(fs.readFileSync(dataDir + '/account.json'))
 const { Client, Authenticator } = require('minecraft-launcher-core')
 
-if(!fs.existsSync(dbFile)) fs.writeFileSync(dbFile,genJson("test","%AppData%/.minecraft","release","1.15.2","2G","2G"))
+if(!fs.existsSync(dbFile)) fs.writeFileSync(dbFile,"{"+genJson("test","%AppData%/.minecraft","release","1.15.2","2G","2G")+"}")
 const dbData = JSON.parse(fs.readFileSync(dbFile))
 
 let window
@@ -84,7 +84,8 @@ function launch(account,type,number,gameDirectory,mem_max,mem_min){
     let launcher = new Client()
     let options = {
         clientPackage:null,
-        authorization:Authenticator.getAuth(account["id"],account["password"]),
+        root:gameDirectory.replace('%AppData%',process.env.APPDATA),
+        authorization:Authenticator.getAuth(account["id"],account["password"]).then(()=>{logger.info('')}),
         version:{
             number:number,
             type:type
